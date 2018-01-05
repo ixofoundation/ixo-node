@@ -1,0 +1,27 @@
+{
+  "name": "ixo_node",
+  "version": "0.0.1",
+  "description": "The project to setup an ixo node",
+  "main": "server.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ixofoundation/ixo_node.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "cedric.franz@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ixofoundation/ixo_node/issues"
+  },
+  "homepage": "https://github.com/ixofoundation/ixo_node#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
