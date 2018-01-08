@@ -13,7 +13,7 @@ var network = {
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.post('/ping', jayson.server(cats).middleware());
+app.post('/network', jayson.server(network).middleware());
 app.listen(PORT);
 
 console.log(`Listening on ${ PORT }`);
