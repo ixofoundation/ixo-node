@@ -15,5 +15,5 @@ const jayson = require('jayson');
    }
  });
   
- server.https().listen(PORT);
+ server.http().listen(PORT);
  console.log(`Listening on ${ PORT }`);
