@@ -5,7 +5,8 @@ const jayson = require('jayson');
 const PORT = process.env.PORT || 5000
 
 var network = {
-    ping: function(callback) {
+    "ping": function(args, callback) {
+        console.log(callback);
         callback(null, 'pong');
     }
 }
