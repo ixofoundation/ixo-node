@@ -1,5 +1,6 @@
-const jayson = require('jayson');
-var express = require('express')
+const jayson = require('jayson/promise');
+
+const express = require('express')
 , router = express.Router()
 
 const network = require('./network');
