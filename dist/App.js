@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const cors = require("cors");
 const logger = require("./logger/Logger");
 const bodyParser = require("body-parser");
 const NetworkRouter_1 = require("./routes/NetworkRouter");
@@ -13,6 +14,7 @@ class App {
     }
     // Configure Express middleware.
     middleware() {
+        this.express.use(cors());
         this.express.use(bodyParser.urlencoded({ extended: true }));
         this.express.use(bodyParser.json());
         this.express.use(logger.before);
