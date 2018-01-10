@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as express from 'express';
+import * as cors from 'cors';
 import * as logger from './logger/Logger';
 import * as bodyParser from 'body-parser';
 
@@ -19,6 +20,7 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
+    this.express.use(cors());
     this.express.use(bodyParser.urlencoded({extended: true}));
     this.express.use(bodyParser.json());
     this.express.use(logger.before);
