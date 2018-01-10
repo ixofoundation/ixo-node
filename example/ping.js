@@ -11,3 +11,4 @@ Promise.all(reqs).then(function(responses) {
   if(responses[0].error) console.log('error');
   console.log(responses[0].result);
 });
+
