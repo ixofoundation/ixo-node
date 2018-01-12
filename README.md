@@ -14,29 +14,29 @@ export MONGOLAB_URI="mongodb://<username>:<password>@<host>:<port>/ixo"
 
 
 ```sh
-$ git clone https://github.com/ixofoundation/ixo_node.git # or clone your own fork
-$ cd ixo_node
-$ npm install
-$ cp .env-example .env
-$ npm run build
-$ npm start
+git clone https://github.com/ixofoundation/ixo_node.git # or clone your own fork
+cd ixo_node
+npm install
+cp .env-example .env
+npm run build
+npm start
 ```
 
 Your app should now be running on [localhost:5000](http://localhost:5000/).
 
 ## Development
-The system is setup to use `ts-node` and `nodemon` to streamline development. bur running the `dev` script all src files are watched and the server will restart on any changes
+The system is setup to use `ts-node` and `nodemon` to streamline development. bur running the `dev` script all `src` files are watched and the server will restart on any changes
 
 ```sh
-$ npm run dev
+npm run dev
 ```
 
 ## Deploying to Heroku
 
 ```
-$ heroku create
-$ git push heroku master
-$ heroku open
+heroku create
+git push heroku master
+heroku open
 ```
 or
 
