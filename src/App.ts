@@ -1,10 +1,13 @@
 import * as path from 'path';
 import * as express from 'express';
+import * as mongoose from 'mongoose'
 import * as cors from 'cors';
 import * as logger from './logger/Logger';
 import * as bodyParser from 'body-parser';
 
 import NetworkRouter from './routes/NetworkRouter';
+import ProjectRouter from './routes/ProjectRouter';
+import { Request, Response } from 'express';
 
 class App {
 
@@ -33,6 +36,7 @@ class App {
     });
 
     this.express.use('/api/network', NetworkRouter);
+    this.express.use('/api/project', ProjectRouter);
     this.express.use(logger.after);
 
   }

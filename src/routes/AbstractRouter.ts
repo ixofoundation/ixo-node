@@ -23,8 +23,7 @@ export abstract class AbstractRouter {
     this.router.post('/', jayson.server(this.setup()).middleware());
   }
 
-  setup(){
-  }
+  setup(){}
 
 }
 

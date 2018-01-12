@@ -5,7 +5,11 @@ const PingHandler_1 = require("../handlers/PingHandler");
 class NetworkRouter extends AbstractRouter_1.AbstractRouter {
     setup() {
         return {
-            "ping": new PingHandler_1.PingHandler().process()
+            "ping": function (args) {
+                return new Promise((resolve, reject) => {
+                    resolve(new PingHandler_1.PingHandler().process(args));
+                });
+            }
         };
     }
 }

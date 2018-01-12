@@ -17,7 +17,6 @@ class AbstractRouter {
     init() {
         this.router.post('/', jayson.server(this.setup()).middleware());
     }
-    setup() {
-    }
+    setup() { }
 }
 exports.AbstractRouter = AbstractRouter;

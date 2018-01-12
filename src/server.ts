@@ -1,16 +1,38 @@
+require('dotenv').config();
 import * as http from 'http';
 import * as logger from './logger/Logger';
+import * as mongoose from 'mongoose';
 
 import App from './App';
 
-const port = normalizePort(process.env.PORT || 5000);
-
+// Set the port
+const port = normalizePort(process.env.PORT || '');
 App.set('port', port);
-
 const server = http.createServer(App);
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+
+// Connect to Mongo DB
+//Set mongoose Pormise
+require('mongoose').Promise = global.Promise;
+
+mongoose.connect(process.env.MONGOLAB_URI || '', { useMongoClient: true });
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Mongo connection error: Cannot start'));
+db.once('open', function() {
+  console.log('MongDB connected!');
+
+  // Once connected listen on server
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+
+});
+
+process.on('SIGTERM', function () {
+  db.close();
+  server.close(function () {
+    process.exit(0);
+  });
+});
 
 function normalizePort(val: number|string): number|string|boolean {
   let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;

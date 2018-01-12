@@ -3,12 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class PingHandler {
     constructor() {
     }
-    process() {
-        return function (args) {
-            return new Promise(function (resolve, reject) {
-                resolve('pong');
-            });
-        };
+    process(args) {
+        return 'pong';
     }
 }
 exports.PingHandler = PingHandler;

@@ -5,6 +5,7 @@ const cors = require("cors");
 const logger = require("./logger/Logger");
 const bodyParser = require("body-parser");
 const NetworkRouter_1 = require("./routes/NetworkRouter");
+const ProjectRouter_1 = require("./routes/ProjectRouter");
 class App {
     //Run configuration methods on the Express instance.
     constructor() {
@@ -25,6 +26,7 @@ class App {
             res.send('API is running');
         });
         this.express.use('/api/network', NetworkRouter_1.default);
+        this.express.use('/api/project', ProjectRouter_1.default);
         this.express.use(logger.after);
     }
 }
