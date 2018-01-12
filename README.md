@@ -6,7 +6,7 @@ The project to setup an ixo node.  It runs Node.js app using [Express 4](http://
 
 Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
 
-Install mongodb and set the following environment variable by exporting the following variable with the variables replaced for your local database
+Install [MongoDB](https://docs.mongodb.com/manual/installation/) and set the following environment variable by exporting the variable with the `<...>` sections replaced for your local database
 
 ```sh
 export MONGOLAB_URI="mongodb://<username>:<password>@<host>:<port>/ixo"
