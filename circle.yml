@@ -4,3 +4,8 @@ machine:
 test:
   override:
     - npm test
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: ixo-node
