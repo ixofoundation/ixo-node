@@ -4,7 +4,7 @@
   "description": "The project to setup an ixo node",
   "main": "server.js",
   "scripts": {
-    "start": "./node_modules/.bin/tsc && node dist/server.js",
+    "start": "node dist/server.js",
     "postinstall": "./node_modules/.bin/tsc",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
     "build": "./node_modules/.bin/tsc",
