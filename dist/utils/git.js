@@ -2,14 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const base64 = require("base-64");
 var utf8 = require('utf8');
+var fetch = require('node-fetch');
 class GitUtils {
     loadFileContents(repo, path) {
         var url = this.constructUrl(repo, path);
-        console.log(url);
         return fetch(url)
-            .then(response => {
-            response.json().then(json => {
-                return json;
+            .then((response) => {
+            return response.json()
+                .then((json) => {
+                return this.decodeBase64(json.content);
             });
         });
     }

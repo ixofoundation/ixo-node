@@ -7,6 +7,16 @@ var jayson = require('jayson/promise');
 class ProjectRouter extends AbstractRouter_1.AbstractRouter {
     setup() {
         return {
+            "getTemplate": function (args) {
+                return new Promise((resolve, reject) => {
+                    new ProjectHandler_1.ProjectHandler().getTemplate(args)
+                        .then((data) => resolve(data))
+                        .catch((err) => {
+                        logger.base.error(err.message, err);
+                        reject(jayson.server().error(null, err.message));
+                    });
+                });
+            },
             "create": function (args) {
                 return new Promise((resolve, reject) => {
                     new ProjectHandler_1.ProjectHandler().create(args)

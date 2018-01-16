@@ -1,5 +1,5 @@
 export declare class GitUtils {
-    loadFileContents(repo: string, path: string): Promise<void>;
+    loadFileContents(repo: string, path: string): Promise<string>;
     decodeBase64(encoded: string): any;
     constructUrl(repo: string, path: string): string;
 }

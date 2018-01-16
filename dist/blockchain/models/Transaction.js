@@ -12,11 +12,12 @@ exports.TransactionSchema = new mongoose_1.Schema({
     },
     nonce: String,
     type: String,
+    signatureType: String,
     signature: String,
     publicKey: String
 });
 exports.TransactionSchema.pre("save", function (next) {
-    if (!crypto_1.default.validateSignature(this.data, this.signature, this.publicKey)) {
+    if (!crypto_1.default.validateSignature(this.data, this.signatureType, this.signature, this.publicKey)) {
         throw new TransactionError_1.TransactionError("Invalid transaction input signature '" + this.data);
     }
     this.nonce = crypto_1.default.createNonce();
@@ -24,7 +25,7 @@ exports.TransactionSchema.pre("save", function (next) {
     next();
 });
 exports.TransactionSchema.methods.validateTransaction = function () {
-    if (!crypto_1.default.validateSignature(this.data, this.signature, this.publicKey)) {
+    if (!crypto_1.default.validateSignature(this.data, this.signatureType, this.signature, this.publicKey)) {
         throw new TransactionError_1.TransactionError("Invalid transaction input signature '" + this.data);
     }
     return true;

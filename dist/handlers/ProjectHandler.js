@@ -14,19 +14,24 @@ class ProjectHandler {
     getTemplate(args) {
         var template = this.constructTemplate(args.name);
         var form = this.constructForm(args.name);
-        var fileContents = this.gitUtils.loadFileContents(this.repoName, template)
-            .then((res) => {
-            return res;
+        return this.gitUtils.loadFileContents(this.repoName, template)
+            .then((templateContents) => {
+            return this.gitUtils.loadFileContents(this.repoName, form)
+                .then((formContents) => {
+                return {
+                    template: JSON.parse(templateContents),
+                    form: JSON.parse(formContents)
+                };
+            });
         });
     }
     create(args) {
-        return BlockChain_1.default.createTransaction(JSON.stringify(args.data), args.signature.sign, args.signature.publicKey)
+        return BlockChain_1.default.createTransaction(JSON.stringify(args.data), args.signature.type, args.signature.signature, args.signature.creator)
             .then((transaction) => {
-            return Project_1.Project.create({
-                "tx": transaction.hash,
-                "name": args.data.name,
-                "owner": args.data.owner
-            });
+            // Deep clone the data using JSON
+            var obj = JSON.parse(JSON.stringify(args.data));
+            obj.tx = transaction.hash;
+            return Project_1.Project.create(obj);
         });
     }
     list(args) {

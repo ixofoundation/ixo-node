@@ -6,10 +6,11 @@ class BlockChain {
     constructor() {
         this.emitter = new events_1.EventEmitter();
     }
-    createTransaction(data, signature, publicKey, emit = true) {
+    createTransaction(data, signatureType, signature, publicKey, emit = true) {
         return new Promise(function (resolve, reject) {
             Transaction_1.Transaction.create({
                 "data": data,
+                "signatureType": signatureType,
                 "signature": signature,
                 "publicKey": publicKey
             }, function (error, newTransaction) {

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { AbstractRouter } from './AbstractRouter';
 export declare class ProjectRouter extends AbstractRouter {
     setup(): {
+        "getTemplate": (args: any) => any;
         "create": (args: any) => any;
         "list": (args: any) => any;
     };

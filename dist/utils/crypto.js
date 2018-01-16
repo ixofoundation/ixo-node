@@ -7,7 +7,10 @@ class CryptoUtils {
     createNonce(size = 64) {
         return crypto.randomBytes(Math.floor(size / 2)).toString('hex');
     }
-    validateSignature(data, signature, address) {
+    validateSignature(data, type, signature, address) {
+        if (type != 'ECDSA') {
+            throw Error("Signature: '" + type + "' not supported");
+        }
         // Same data as before
         var message = ethUtil.toBuffer(data);
         var msgHash = ethUtil.hashPersonalMessage(message);

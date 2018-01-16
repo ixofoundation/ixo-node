@@ -4,8 +4,11 @@ export declare class ProjectHandler {
     gitUtils: GitUtils;
     repoName: string;
     constructor();
-    getTemplate(args: any): void;
-    create(args: any): Promise<IProjectModel>;
+    getTemplate(args: any): Promise<{
+        template: any;
+        form: any;
+    }>;
+    create(args: any): Promise<IProjectModel[]>;
     list(args: any): Promise<IProjectModel[]>;
     constructTemplate(name: string): string;
     constructForm(name: string): string;
