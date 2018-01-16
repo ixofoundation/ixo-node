@@ -5,7 +5,7 @@ export class PingHandler {
   constructor() {
   }
 
-  process(args: any) {
+  process(args: any){
     return 'pong';
   }
 

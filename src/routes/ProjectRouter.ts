@@ -14,6 +14,18 @@ export class ProjectRouter extends AbstractRouter{
   setup() {
     return {
 
+      "getTemplate": function(args: any) {
+        return new Promise((resolve: Function, reject: Function) => {
+          new ProjectHandler().getTemplate(args)
+            .then(
+              (data) => resolve(data))
+            .catch( (err: Error) => {
+              logger.base.error(err.message, err); 
+              reject(jayson.server().error(null, err.message))
+            });
+        })
+      },
+
       "create": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
           new ProjectHandler().create(args)
