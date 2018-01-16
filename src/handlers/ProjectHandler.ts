@@ -26,7 +26,6 @@ export class ProjectHandler {
       .then((templateContents: any) => {
         return this.gitUtils.loadFileContents(this.repoName, form)
         .then((formContents: any) =>{
-
           return {
             template: JSON.parse(templateContents),
             form: JSON.parse(formContents)

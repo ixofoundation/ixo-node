@@ -6,7 +6,7 @@
   "scripts": {
     "start": "./node_modules/.bin/tsc && node dist/server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
-    "build": "tsc",
+    "build": "./node_modules/.bin/ts",
     "test": "mocha -r ts-node/register 'test/**/*.spec.ts' --exit"
   },
   "repository": {
