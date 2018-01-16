@@ -14,9 +14,9 @@ const server = http.createServer(App);
 //Set mongoose Pormise
 require('mongoose').Promise = global.Promise;
 
-console.log(process.env.MONGOLAB_URI);
+console.log(process.env.MONGODB_URI);
 
-mongoose.connect(process.env.MONGOLAB_URI || '', { useMongoClient: true });
+mongoose.connect(process.env.MONGODB_URI || '', { useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongo connection error: Cannot start'));
 db.once('open', function() {
