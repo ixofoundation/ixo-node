@@ -3,6 +3,7 @@ export interface ITransaction {
   hash: String;
   nonce: String;
   type: String;
+  signatureType: String;
   signature: String;
   publicKey: String;
 }

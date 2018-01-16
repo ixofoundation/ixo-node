@@ -13,11 +13,12 @@ export class BlockChain {
   }
 
 
-  createTransaction(data: String, signature: String, publicKey: String, emit = true): Promise<ITransactionModel>{
+  createTransaction(data: String, signatureType: String, signature: String, publicKey: String, emit = true): Promise<ITransactionModel>{
     return new Promise(function(resolve: Function, reject: Function){
       Transaction.create(
         {
           "data": data, 
+          "signatureType": signatureType,
           "signature": signature, 
           "publicKey": publicKey
         }, function(error: Error, newTransaction: ITransactionModel){

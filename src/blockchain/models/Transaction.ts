@@ -17,12 +17,13 @@ export var TransactionSchema: Schema = new Schema({
   },
   nonce: String,
   type: String,
+  signatureType: String,
   signature: String,
   publicKey: String
  });
 
 TransactionSchema.pre("save", function(this: ITransaction, next) {
-  if(!cryptoUtils.validateSignature(this.data, this.signature, this.publicKey)){
+  if(!cryptoUtils.validateSignature(this.data, this.signatureType, this.signature, this.publicKey)){
       throw new TransactionError("Invalid transaction input signature '" + this.data);
   }
   this.nonce = cryptoUtils.createNonce();
@@ -31,7 +32,7 @@ TransactionSchema.pre("save", function(this: ITransaction, next) {
 });
 
 TransactionSchema.methods.validateTransaction = function(): boolean {
-  if(!cryptoUtils.validateSignature(this.data, this.signature, this.publicKey)){
+  if(!cryptoUtils.validateSignature(this.data, this.signatureType, this.signature, this.publicKey)){
     throw new TransactionError("Invalid transaction input signature '" + this.data);
   }
   return true;

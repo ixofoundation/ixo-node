@@ -4,7 +4,7 @@
   "description": "The project to setup an ixo node",
   "main": "server.js",
   "scripts": {
-    "start": "tsc && node dist/server.js",
+    "start": "./node_modules/.bin/tsc && node dist/server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
     "build": "tsc",
     "test": "mocha -r ts-node/register 'test/**/*.spec.ts' --exit"

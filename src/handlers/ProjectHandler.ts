@@ -36,13 +36,12 @@ export class ProjectHandler {
   }
 
   create(args: any) {
-    return blockchain.createTransaction(JSON.stringify(args.data), args.signature.sign, args.signature.publicKey)
+    return blockchain.createTransaction(JSON.stringify(args.data), args.signature.type, args.signature.signature, args.signature.creator)
       .then((transaction: ITransactionModel) => {
-        return Project.create({
-          "tx": transaction.hash,
-          "name": args.data.name,
-          "owner": args.data.owner
-        })
+        // Deep clone the data using JSON
+        var obj = JSON.parse(JSON.stringify(args.data));
+        obj.tx = transaction.hash;
+        return Project.create(obj);
       })
   }
 

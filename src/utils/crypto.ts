@@ -9,7 +9,10 @@ export class CryptoUtils {
     return crypto.randomBytes(Math.floor(size / 2)).toString('hex');
   }
 
-  validateSignature(data: String, signature: String, address: String): Boolean{
+  validateSignature(data: String, type: String, signature: String, address: String): Boolean{
+    if(type != 'ECDSA'){
+      throw Error("Signature: '" + type + "' not supported");
+    }
     // Same data as before
     var message = ethUtil.toBuffer(data);
     var msgHash = ethUtil.hashPersonalMessage(message);
