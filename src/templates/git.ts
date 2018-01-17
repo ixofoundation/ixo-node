@@ -7,6 +7,7 @@ export class GitUtils {
 
   loadFileContents(repo: string, path: string): Promise<string>{
     var url = this.constructUrl(repo, path);
+    console.log(url);
 
     return fetch(url)
       .then((response: any) => {

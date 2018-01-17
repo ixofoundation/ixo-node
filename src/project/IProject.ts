@@ -6,4 +6,5 @@ export interface IProject {
     email: String;
   }
   name: String;
+  country: String;
 }

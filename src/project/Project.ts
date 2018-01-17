@@ -16,11 +16,29 @@ export var ProjectSchema: Schema = new Schema({
     Date.now
   },
   owner: {
-    did: String,
-    name: String,
-    email: String,
+    did: {
+      type: String,
+      required : true,
+      index: true
+    },
+    name: {
+      type: String,
+      required : true
+    },
+    email: {
+      type: String,
+      required : true
+    },
   },
-  name: String,
+  name: {
+    type: String,
+    required : true
+  },
+  country: {
+    type: String,
+    required : true,
+    index: true
+  }
  });
 
  ProjectSchema.pre("save", function(this: IProject, next) {

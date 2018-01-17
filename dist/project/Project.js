@@ -12,11 +12,29 @@ exports.ProjectSchema = new mongoose_1.Schema({
         default: Date.now
     },
     owner: {
-        did: String,
-        name: String,
-        email: String,
+        did: {
+            type: String,
+            required: true,
+            index: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
     },
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
+        required: true,
+        index: true
+    }
 });
 exports.ProjectSchema.pre("save", function (next) {
     next();

@@ -31,6 +31,7 @@ class ProjectHandler {
             // Deep clone the data using JSON
             var obj = JSON.parse(JSON.stringify(args.data));
             obj.tx = transaction.hash;
+            obj.owner.did = args.signature.creator;
             return Project_1.Project.create(obj);
         });
     }

@@ -1,37 +1,21 @@
 import {Project, IProjectModel} from '../project/Project';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
-import {GitUtils} from '../utils/git';
+import {TemplateUtils} from '../templates/TemplateUtils';
+import {TemplateType} from '../templates/TemplateType';
 
 declare var Promise: any;
 
 export class ProjectHandler {
 
-  gitUtils: GitUtils
-  repoName: string
+  templateUtils: TemplateUtils;
 
   constructor(){
-    this.gitUtils = new GitUtils();
-    this.repoName = 'ixofoundation';
+    this.templateUtils = new TemplateUtils();
   }
 
-  /*
-    Returns the Template and the corresponding form for the name supplied
-  */
   getTemplate(args: any){
-    var template = this.constructTemplate(args.name);
-    var form = this.constructForm(args.name);
-
-    return this.gitUtils.loadFileContents(this.repoName, template)
-      .then((templateContents: any) => {
-        return this.gitUtils.loadFileContents(this.repoName, form)
-        .then((formContents: any) =>{
-          return {
-            template: JSON.parse(templateContents),
-            form: JSON.parse(formContents)
-          }
-        });
-      });
+    return this.templateUtils.getTemplate(args.type + "s", args.name);
   }
 
   create(args: any) {
@@ -40,6 +24,7 @@ export class ProjectHandler {
         // Deep clone the data using JSON
         var obj = JSON.parse(JSON.stringify(args.data));
         obj.tx = transaction.hash;
+        obj.owner.did = args.signature.creator;
         return Project.create(obj);
       })
   }
@@ -49,17 +34,6 @@ export class ProjectHandler {
       .sort('-created')
       .exec();
     }
-
-
-
-  // Utilities
-  constructTemplate(name: string){
-    return "/projects/" + name + ".json";
-  }
-
-  constructForm(name: string){
-    return "/projects/" + name + "_form.json";
-  }
 
 }
 
