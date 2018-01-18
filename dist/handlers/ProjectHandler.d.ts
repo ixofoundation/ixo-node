@@ -1,8 +1,7 @@
 import { IProjectModel } from '../project/Project';
-import { GitUtils } from '../utils/git';
+import { TemplateUtils } from '../templates/TemplateUtils';
 export declare class ProjectHandler {
-    gitUtils: GitUtils;
-    repoName: string;
+    templateUtils: TemplateUtils;
     constructor();
     getTemplate(args: any): Promise<{
         template: any;
@@ -10,6 +9,4 @@ export declare class ProjectHandler {
     }>;
     create(args: any): Promise<IProjectModel[]>;
     list(args: any): Promise<IProjectModel[]>;
-    constructTemplate(name: string): string;
-    constructForm(name: string): string;
 }

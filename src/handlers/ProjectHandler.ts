@@ -2,7 +2,6 @@ import {Project, IProjectModel} from '../project/Project';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
 import {TemplateUtils} from '../templates/TemplateUtils';
-import {TemplateType} from '../templates/TemplateType';
 
 declare var Promise: any;
 

@@ -6,6 +6,7 @@ const logger = require("./logger/Logger");
 const bodyParser = require("body-parser");
 const NetworkRouter_1 = require("./routes/NetworkRouter");
 const ProjectRouter_1 = require("./routes/ProjectRouter");
+const TemplateRouter_1 = require("./routes/TemplateRouter");
 class App {
     //Run configuration methods on the Express instance.
     constructor() {
@@ -27,6 +28,7 @@ class App {
         });
         this.express.use('/api/network', NetworkRouter_1.default);
         this.express.use('/api/project', ProjectRouter_1.default);
+        this.express.use('/api/template', TemplateRouter_1.default);
         this.express.use(logger.after);
     }
 }

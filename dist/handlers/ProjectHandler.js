@@ -2,28 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Project_1 = require("../project/Project");
 const BlockChain_1 = require("../blockchain/BlockChain");
-const git_1 = require("../utils/git");
+const TemplateUtils_1 = require("../templates/TemplateUtils");
 class ProjectHandler {
     constructor() {
-        this.gitUtils = new git_1.GitUtils();
-        this.repoName = 'ixofoundation';
+        this.templateUtils = new TemplateUtils_1.TemplateUtils();
     }
-    /*
-      Returns the Template and the corresponding form for the name supplied
-    */
     getTemplate(args) {
-        var template = this.constructTemplate(args.name);
-        var form = this.constructForm(args.name);
-        return this.gitUtils.loadFileContents(this.repoName, template)
-            .then((templateContents) => {
-            return this.gitUtils.loadFileContents(this.repoName, form)
-                .then((formContents) => {
-                return {
-                    template: JSON.parse(templateContents),
-                    form: JSON.parse(formContents)
-                };
-            });
-        });
+        if (args.type == "project") {
+            return this.templateUtils.getTemplate("projects", args.name);
+        }
+        else {
+            throw Error("Template 'type' must be 'project'");
+        }
     }
     create(args) {
         return BlockChain_1.default.createTransaction(JSON.stringify(args.data), args.signature.type, args.signature.signature, args.signature.creator)
@@ -39,13 +29,6 @@ class ProjectHandler {
         return Project_1.Project.find()
             .sort('-created')
             .exec();
-    }
-    // Utilities
-    constructTemplate(name) {
-        return "/projects/" + name + ".json";
-    }
-    constructForm(name) {
-        return "/projects/" + name + "_form.json";
     }
 }
 exports.ProjectHandler = ProjectHandler;
