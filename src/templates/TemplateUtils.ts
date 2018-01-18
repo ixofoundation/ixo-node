@@ -1,4 +1,4 @@
-import {GitUtils} from './git';
+import {GitUtils} from './GitUtils';
 
 export class TemplateUtils { 
 

@@ -39,4 +39,4 @@ export class CryptoUtils {
 
 }
 
-export default new CryptoUtils();
+export default CryptoUtils;

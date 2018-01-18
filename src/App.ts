@@ -7,6 +7,7 @@ import * as bodyParser from 'body-parser';
 
 import NetworkRouter from './routes/NetworkRouter';
 import ProjectRouter from './routes/ProjectRouter';
+import TemplateRouter from './routes/TemplateRouter';
 import { Request, Response } from 'express';
 
 class App {
@@ -37,6 +38,8 @@ class App {
 
     this.express.use('/api/network', NetworkRouter);
     this.express.use('/api/project', ProjectRouter);
+    this.express.use('/api/template', TemplateRouter);
+
     this.express.use(logger.after);
 
   }

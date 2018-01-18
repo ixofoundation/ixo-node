@@ -15,7 +15,12 @@ export class ProjectHandler {
   }
 
   getTemplate(args: any){
-    return this.templateUtils.getTemplate(args.type + "s", args.name);
+    if(args.type == "project"){
+      return this.templateUtils.getTemplate("projects", args.name);
+    }else{
+      throw Error("Template 'type' must be 'project'");
+    }
+
   }
 
   create(args: any) {

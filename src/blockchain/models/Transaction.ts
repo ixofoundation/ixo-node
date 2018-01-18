@@ -2,7 +2,9 @@ import { Document, Schema, Model, model} from "mongoose";
 import {TransactionError} from './TransactionError';
 import { ITransaction } from "./ITransaction";
 
-import cryptoUtils from '../../utils/crypto'
+import CryptoUtils from '../../utils/CryptoUtils'
+
+var cryptoUtils = new CryptoUtils();
 
 export interface ITransactionModel extends ITransaction, Document {
   validateTransaction(): boolean;

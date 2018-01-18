@@ -7,12 +7,12 @@ export class GitUtils {
 
   loadFileContents(repo: string, path: string): Promise<string>{
     var url = this.constructUrl(repo, path);
-    console.log(url);
 
     return fetch(url)
       .then((response: any) => {
         return response.json()
           .then((json: any) => {
+            if(!json.content) throw Error("Resource not found: " + url);
             return this.decodeBase64(json.content);
           });
       })
