@@ -53,7 +53,7 @@ export class ProjectRouter extends AbstractRouter{
 
       "listForDID": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().list(args)
+          new ProjectHandler().listForDID(args)
             .then(
               (data) => resolve(data))
             .catch( (err: Error) => {
