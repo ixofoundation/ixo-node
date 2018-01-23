@@ -15,7 +15,7 @@ export class AgentHandler {
 
   getTemplate(args: any) {
     if (args.type == undefined || args.type == "agent") {
-      return this.templateUtils.getTemplate("agent", args.name);
+      return this.templateUtils.getTemplate("agents", args.name);
     } else {
       throw Error("Template 'type' must be 'agent'");
     }
