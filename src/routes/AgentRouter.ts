@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 import {AbstractRouter} from './AbstractRouter';
-import {ProjectHandler} from '../handlers/ProjectHandler';
+import {AgentHandler} from '../handlers/AgentHandler';
 import * as logger from '../logger/Logger';
 
 
@@ -9,14 +9,14 @@ var jayson = require('jayson/promise');
 
 declare var Promise: any;
 
-export class ProjectRouter extends AbstractRouter{
+export class AgentRouter extends AbstractRouter{
 
   setup() {
     return {
 
       "getTemplate": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().getTemplate(args)
+          new AgentHandler().getTemplate(args)
             .then(
               (data) => resolve(data))
             .catch( (err: Error) => {
@@ -28,7 +28,7 @@ export class ProjectRouter extends AbstractRouter{
 
       "create": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().create(args)
+          new AgentHandler().create(args)
             .then(
               (data) => resolve(data))
             .catch( (err: Error) => {
@@ -40,7 +40,7 @@ export class ProjectRouter extends AbstractRouter{
 
       "list": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().list(args)
+          new AgentHandler().list(args)
             .then(
               (data) => resolve(data))
             .catch( (err: Error) => {
@@ -53,7 +53,20 @@ export class ProjectRouter extends AbstractRouter{
 
       "listForDID": function(args: any) {
         return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().list(args)
+          new AgentHandler().listForDID(args)
+            .then(
+              (data) => resolve(data))
+            .catch( (err: Error) => {
+              logger.base.error(err.message, err); 
+              reject(jayson.server().error(null, err.message))
+            });
+        })
+
+      },
+
+      "listForProject": function(args: any) {
+        return new Promise((resolve: Function, reject: Function) => {
+          new AgentHandler().listForProject(args)
             .then(
               (data) => resolve(data))
             .catch( (err: Error) => {
@@ -63,12 +76,11 @@ export class ProjectRouter extends AbstractRouter{
         })
 
       }
-
     }
   }
 
 }
 
 // Create the Router, and export its configured Express.Router
-export default new ProjectRouter().router;
+export default new AgentRouter().router;
 

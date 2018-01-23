@@ -39,7 +39,7 @@ export var ProjectSchema: Schema = new Schema({
     required : true,
     index: true
   }
- });
+}, {strict: false});   // Allow any other fields to also be included over and above the standard ones
 
  ProjectSchema.pre("save", function(this: IProject, next) {
   next();

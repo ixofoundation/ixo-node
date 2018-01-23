@@ -28,6 +28,7 @@ export class CryptoUtils {
       logger.base.debug("Signature failed - in: " + address + " out: " + recoveredAddress);
     }
     return (recoveredAddress == address);
+    //return true;
 
   }
 

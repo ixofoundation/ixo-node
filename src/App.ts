@@ -1,14 +1,14 @@
 import * as path from 'path';
 import * as express from 'express';
-import * as mongoose from 'mongoose'
 import * as cors from 'cors';
-import * as logger from './logger/Logger';
 import * as bodyParser from 'body-parser';
+import { Request, Response } from 'express';
+import * as logger from './logger/Logger';
 
+import AgentRouter from './routes/AgentRouter';
 import NetworkRouter from './routes/NetworkRouter';
 import ProjectRouter from './routes/ProjectRouter';
 import TemplateRouter from './routes/TemplateRouter';
-import { Request, Response } from 'express';
 
 class App {
 
@@ -36,6 +36,7 @@ class App {
       res.send('API is running');
     });
 
+    this.express.use('/api/agent', AgentRouter);
     this.express.use('/api/network', NetworkRouter);
     this.express.use('/api/project', ProjectRouter);
     this.express.use('/api/template', TemplateRouter);
