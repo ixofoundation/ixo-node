@@ -7,6 +7,8 @@ import {IxoValidationError} from "../../errors/IxoValidationError";
 export interface IAgentModel extends IAgent, Document {
 }
 
+export var AGENT_ROLE = Object.freeze({'OA': 'OA', 'SA': 'SA', 'IA': 'IA', 'EA': 'EA'});
+
 export var AgentSchema: Schema = new Schema({
   tx: {
     type: String,
@@ -38,7 +40,7 @@ export var AgentSchema: Schema = new Schema({
   },
   role: {
     type: String,
-    validate: function(role: String){return ["SA","FA","EA"].indexOf(role.toString())!= -1},
+    validate: function(role: String){return [AGENT_ROLE.SA,AGENT_ROLE.IA,AGENT_ROLE.EA].indexOf(role.toString())!= -1},
     required : true
   }
  }, {strict: false});   // Allow any other fields to also be included over and above the standard ones
@@ -78,8 +80,8 @@ function validateAgent(projectTx: String, did: String, role: String, callback: F
       if(agent.did == did && agent.role == role) 
         callback(new IxoValidationError("Agent: '" + did + "' already exists on the project"), null);
       // Ensure agent is not an EA and SA
-      if(agent.did == did && ((agent.role == 'SA' && role == 'EA')
-          || (agent.role == 'EA' && role == 'SA')) )
+      if(agent.did == did && ((agent.role == AGENT_ROLE.SA && role == AGENT_ROLE.EA)
+          || (agent.role == AGENT_ROLE.EA && role == AGENT_ROLE.SA)) )
         callback(new IxoValidationError('An agent cannot be a Service Agent and an Evaluation agent on the same project'), null);
         return;
     })
