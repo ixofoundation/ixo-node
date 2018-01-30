@@ -1,6 +1,22 @@
 import {GitUtils} from './GitUtils';
+import {TemplateSchema} from './TemplateSchema';
 
-var templateCache = new Map<string, any>();
+var templateCache = new Map<string, SchemaFormTemplate>();
+
+export class SchemaFormTemplate {
+  template: any;
+  form: any;
+
+  constructor(template: any, form: any){
+    this.template = new TemplateSchema(template);
+    this.form = form;
+  }
+
+  asJSON(): any {
+    return {template: this.template.getSchema(), form: this.form};
+  }
+
+}
 
 export class TemplateUtils { 
 
@@ -32,28 +48,22 @@ export class TemplateUtils {
       .then((templateContents: any) => {
         return this.gitUtils.loadFileContents(this.repoName, form)
         .then((formContents: any) =>{
-          var res = {
-            template: JSON.parse(templateContents),
-            form: JSON.parse(formContents)
-          }
+          var res = new SchemaFormTemplate(JSON.parse(templateContents), JSON.parse(formContents));
           templateCache.set(key, res);
-          return res;
+          return res.asJSON();
         });
       });
   }
 
   getCacheKey(templateType: string, name: string): string {
     return (templateType + "|" + name).toString();
-}
+  }
 
   validateData(data: any, templateType: string, templateName: string){
-
+    return this.getTemplate(templateType, name).then((content) => {
+      return content.template.isValid(data);
+    });
   }
-
-  getTemplateContents(templateType: string, templateName: string){
-    
-  }
-
 
   // Utilities
   constructTemplate(templateType: string, name: string){
