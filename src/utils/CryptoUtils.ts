@@ -48,7 +48,7 @@ export class CryptoUtils {
     return hash;
   }
 
-  remove0x(key: String): String {
+  remove0x(key: string): string {
     if(key.indexOf("0x") == 0){
       return key.substring(2);
     }else{
