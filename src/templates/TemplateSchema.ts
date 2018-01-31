@@ -22,7 +22,7 @@ export class TemplateSchema {
         if(typeof val === 'object'){
           var schemaVal = schema[key];
           if(val.constructor == Array){
-            // check schema is an array and has one value
+            // check schema is an array and has one values
             if(typeof schemaVal == 'object' && schemaVal.constructor == Array && schemaVal[0]){
               var isValid = true;
               val.forEach((eachVal: any) => {

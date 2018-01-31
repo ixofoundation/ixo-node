@@ -7,7 +7,7 @@ import {TemplateSchema} from '../../src/templates/TemplateSchema';
 
 chai.use(chaiAsPromised);
 
-describe('Handlers', function () {
+describe('TemplateSchema', function () {
     var schema = new TemplateSchema(
         {
             "@context": "http://ixo.foundation/schema",
