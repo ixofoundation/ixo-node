@@ -15,31 +15,39 @@ export class CryptoUtils {
     switch (type)
     {
       case "ECDSA": 
-        // Same data as before
-        var message = ethUtil.toBuffer(data);
-        var msgHash = ethUtil.hashPersonalMessage(message);
-
-        var signatureBuffer = ethUtil.toBuffer(signature);
-        var sigParams = ethUtil.fromRpcSig(signatureBuffer);
-
-        var recoveredPublicKey = ethUtil.ecrecover(msgHash, sigParams.v, sigParams.r, sigParams.s);
-        
-        var sender = ethUtil.publicToAddress(recoveredPublicKey);
-        var recoveredAddress = ethUtil.bufferToHex(sender);
-        if((recoveredAddress != publicKey)){
-          logger.base.debug("Signature failed - in: " + publicKey + " out: " + recoveredAddress);
-        }
-        return (recoveredAddress == publicKey);
-/*      case "Ed25519":
-        var decodedKey = bs58.decode(this.remove0x(publicKey).toString());
-        var signatureBuffer = bs58.decode(this.remove0x(signature).toString());
-        var recoveredMsgBuffer = nacl.sign.open(signatureBuffer, decodedKey) || new Buffer("");
-        var recoveredMsg = new Buffer(recoveredMsgBuffer).toString("utf8");
-        return (recoveredMsg == data)
-*/      default: 
+        return this.validateECDSASignature(data, signature, publicKey);
+      case "Ed25519":
+        return this.validateEd25519Signature(data, signature, publicKey);
+      default: 
         throw Error("Signature: '" + type + "' not supported");
       }
 
+  }
+
+  validateEd25519Signature(data: String, signature: String, publicKey: String): Boolean{
+    var decodedKey = new Uint8Array(bs58.decode(this.remove0x(publicKey).toString()));
+    var signatureBuffer = new Uint8Array(bs58.decode(this.remove0x(signature).toString()));
+    var recoveredMsgBuffer = nacl.sign.open(signatureBuffer, decodedKey) || new Buffer("");
+    var recoveredMsg = new Buffer(recoveredMsgBuffer).toString("utf8");
+    return (recoveredMsg == data)
+  }
+
+  validateECDSASignature(data: String, signature: String, publicKey: String): Boolean{
+    // Same data as before
+    var message = ethUtil.toBuffer(data);
+    var msgHash = ethUtil.hashPersonalMessage(message);
+
+    var signatureBuffer = ethUtil.toBuffer(signature);
+    var sigParams = ethUtil.fromRpcSig(signatureBuffer);
+
+    var recoveredPublicKey = ethUtil.ecrecover(msgHash, sigParams.v, sigParams.r, sigParams.s);
+    
+    var sender = ethUtil.publicToAddress(recoveredPublicKey);
+    var recoveredAddress = ethUtil.bufferToHex(sender);
+    if((recoveredAddress != publicKey)){
+      logger.base.debug("Signature failed - in: " + publicKey + " out: " + recoveredAddress);
+    }
+    return (recoveredAddress == publicKey);
   }
 
   hash(input: any): String {
