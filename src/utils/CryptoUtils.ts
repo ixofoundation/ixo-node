@@ -30,13 +30,13 @@ export class CryptoUtils {
           logger.base.debug("Signature failed - in: " + publicKey + " out: " + recoveredAddress);
         }
         return (recoveredAddress == publicKey);
-      case "Ed25519":
-        var decodedKey = bs58.decode(this.remove0x(publicKey));
-        var signatureBuffer = bs58.decode(this.remove0x(signature));
+/*      case "Ed25519":
+        var decodedKey = bs58.decode(this.remove0x(publicKey).toString());
+        var signatureBuffer = bs58.decode(this.remove0x(signature).toString());
         var recoveredMsgBuffer = nacl.sign.open(signatureBuffer, decodedKey) || new Buffer("");
         var recoveredMsg = new Buffer(recoveredMsgBuffer).toString("utf8");
         return (recoveredMsg == data)
-      default: 
+*/      default: 
         throw Error("Signature: '" + type + "' not supported");
       }
 
@@ -48,7 +48,7 @@ export class CryptoUtils {
     return hash;
   }
 
-  remove0x(key: string): string {
+  remove0x(key: String): String {
     if(key.indexOf("0x") == 0){
       return key.substring(2);
     }else{
