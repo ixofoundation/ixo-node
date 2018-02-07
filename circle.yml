@@ -1,4 +1,7 @@
 machine:
+  environment:
+    MONGODB_URI: mongodb://localhost/ixo
+    PORT: 5001
   node:
     version: 9.3.0
 test:

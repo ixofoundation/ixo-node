@@ -71,7 +71,6 @@
     "gulp-typescript": "^3.2.3",
     "mocha": "^4.1.0",
     "mockgoose": "^7.3.5",
-    "mongo-in-memory": "0.0.5",
     "nodemon": "^1.14.11"
   }
 }
