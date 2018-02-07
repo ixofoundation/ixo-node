@@ -27,7 +27,6 @@ describe('Handlers', function () {
         it('should return "default" project template and form', function () {
             var promise = new TemplateHandler().getTemplate({payload: {data:{type: 'project', name: "default"},did:"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
                 .then((res) => {
-                    console.log(JSON.stringify(res));
                     return res.template['@context']
                 });
             return expect(Promise.resolve(promise)).to.eventually.equal('http://ixo.foundation/schema');

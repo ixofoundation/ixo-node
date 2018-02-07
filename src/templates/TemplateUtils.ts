@@ -22,12 +22,10 @@ export class TemplateUtils {
 
   gitUtils: GitUtils
   repoName: string
-//  templateCache: Map<string, any>
 
   constructor(){
     this.gitUtils = new GitUtils();
     this.repoName = 'ixofoundation';
-//    this.templateCache = new Map<string, string>();
   }
 
   /*

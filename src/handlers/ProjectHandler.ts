@@ -62,10 +62,15 @@ export class ProjectHandler {
 
   listForDID = (args: any) => {
     var request = new Request(args);
-    if(request.data.did == undefined) throw Error("'did' not specified");
-    return Project.find({"owner.did": request.data.did})
-      .sort('-created')
-      .exec();
+    if(request.data.did == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'did' not specified in params"));
+      })
+    }else{
+      return Project.find({"owner.did": request.data.did})
+        .sort('-created')
+        .exec();
+    }
   }
 
 
