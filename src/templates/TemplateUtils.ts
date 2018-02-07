@@ -61,7 +61,7 @@ export class TemplateUtils {
 
   validateData(data: any, templateType: string, templateName: string){
     return this.getTemplate(templateType, name).then((content) => {
-      return content.template.isValid(data);
+      return content.template.isValidForData(data);
     });
   }
 

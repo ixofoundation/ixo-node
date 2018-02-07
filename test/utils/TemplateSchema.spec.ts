@@ -33,19 +33,15 @@ describe('TemplateSchema', function () {
         }
     };
 
-    describe('TemplateSchema', function () {
-        it('should return validate', function () {
-            expect(schema.isValidForData(data)).to.eql(true);
-        });
+    it('should return validate', function () {
+        return expect(schema.isValidForData(data)).to.eql(true);
     });
 
-    describe('TemplateSchema', function () {
-        it('should return fail: Additional field', function () {
-            var data = {...data};
-            data.template = {...data.template, type: "projects"};
+    it('should return fail: Additional field', function () {
+        var data = {...data};
+        data.template = {...data.template, type: "projects"};
 
-            expect(schema.isValidForData(data)).to.eql(false);
-        });
+        return expect(schema.isValidForData(data)).to.eql(false);
     });
 
 });
