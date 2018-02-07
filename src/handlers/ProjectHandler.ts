@@ -28,7 +28,9 @@ export class ProjectHandler {
                                                 }
                                               });
     }else{
-      throw new IxoValidationError("Template 'type' must be 'project'");
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("Template 'type' must be 'project'"));
+      })
     }
   }
 
@@ -39,7 +41,6 @@ export class ProjectHandler {
         resolve(request);
       }
     }).then( (request: Request) => {
-      console.log("About to save tran");
       return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
     }).then((transaction: ITransactionModel) => {
         // Deep clone the data using JSON
@@ -48,7 +49,6 @@ export class ProjectHandler {
           owner: {...args.payload.data.owner,
             did: args.signature.creator}
         }
-        console.log("About to save proj");
         return Project.create(obj);
       })
   }
