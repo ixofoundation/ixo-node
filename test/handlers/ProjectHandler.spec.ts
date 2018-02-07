@@ -32,19 +32,22 @@ describe('ProjectHandler', function () {
         it('should return "default" project template and form', function () {
             var promise = new ProjectHandler().getTemplate({payload: {data:{name: "default"},did:"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
                 .then((res) => {
-                    console.log(JSON.stringify(res));
-                    return res.template.schema['@context']
+                    return res.template['@context']
                 });
             return expect(Promise.resolve(promise)).to.eventually.equal('http://ixo.foundation/schema');
         });
 
         it('should return and error as the type is not "project"', function () {
-            var promise = new ProjectHandler().getTemplate({payload: {data:{type: 'claim', name: "default"},did:"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+            return new ProjectHandler().getTemplate({payload: {data:{type: 'claim', name: "default"},did:"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
                 .then((res) => {
                     console.log(JSON.stringify(res));
                     return res.template['@context'];
+                })
+                .catch((err) => {
+                    console.log("Error raised");
+                    return expect(err).to.equal(Error);
                 });
-            return expect(Promise.resolve(promise)).to.throw(Error);
+            //return expect(Promise.reject(promise)).to.be.rejectedWith("Error: Template 'type' must be 'project'");
         });
     });
 
