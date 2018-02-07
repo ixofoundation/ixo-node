@@ -1,8 +1,9 @@
-import {Router, Request, Response, NextFunction} from 'express';
+import {Router, Response, NextFunction} from 'express';
+import * as logger from '../logger/Logger';
+import {Request} from "../handlers/Request";
+
+
 const jayson = require('jayson/promise');
-
-import {PingHandler} from '../handlers/PingHandler';
-
 
 export abstract class AbstractRouter {
   router: Router
@@ -21,6 +22,20 @@ export abstract class AbstractRouter {
    */
   init() {
     this.router.post('/', jayson.server(this.setup()).middleware());
+  }
+
+  register(config: any, method: string, handlerFunction: Function){
+    config[method] = (args: any) => {
+      return new Promise((resolve: Function, reject: Function) => {
+        handlerFunction(args)
+        .then(
+          (data: any) => resolve(data))
+        .catch( (err: Error) => {
+          logger.base.error(err.message, err); 
+          reject(jayson.server().error(null, err.message))
+        });
+      });
+    }; 
   }
 
   setup(){}

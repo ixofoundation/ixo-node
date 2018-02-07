@@ -37,7 +37,13 @@ export class TemplateUtils {
     var key = this.getCacheKey(templateType, name);
     if(templateCache.has(key)){
       return new Promise((resolve: Function, reject: Function) => {
-        resolve(templateCache.get(key));
+        var template = templateCache.get(key);
+        if(template){
+          resolve(template.asJSON());
+        }else{
+          reject();
+        }
+        
       })
     }
 
@@ -61,7 +67,7 @@ export class TemplateUtils {
 
   validateData(data: any, templateType: string, templateName: string){
     return this.getTemplate(templateType, name).then((content) => {
-      return content.template.isValid(data);
+      return content.template.isValidForData(data);
     });
   }
 

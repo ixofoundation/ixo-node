@@ -12,59 +12,15 @@ declare var Promise: any;
 export class ProjectRouter extends AbstractRouter{
 
   setup() {
-    return {
+    let config = {};
 
-      "getTemplate": function(args: any) {
-        return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().getTemplate(args)
-            .then(
-              (data) => resolve(data))
-            .catch( (err: Error) => {
-              logger.base.error(err.message, err); 
-              reject(jayson.server().error(null, err.message))
-            });
-        })
-      },
+    const handler = new ProjectHandler();
+    this.register(config, "getTemplate", handler.getTemplate);
+    this.register(config, "create", handler.create);
+    this.register(config, "list", handler.list);
+    this.register(config, "listForDID", handler.listForDID);
 
-      "create": function(args: any) {
-        return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().create(args)
-            .then(
-              (data) => resolve(data))
-            .catch( (err: Error) => {
-              logger.base.error(err.message, err); 
-              reject(jayson.server().error(null, err.message))
-            });
-        })
-      },
-
-      "list": function(args: any) {
-        return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().list(args)
-            .then(
-              (data) => resolve(data))
-            .catch( (err: Error) => {
-              logger.base.error(err.message, err); 
-              reject(jayson.server().error(null, err.message))
-            });
-        })
-
-      },
-
-      "listForDID": function(args: any) {
-        return new Promise((resolve: Function, reject: Function) => {
-          new ProjectHandler().listForDID(args)
-            .then(
-              (data) => resolve(data))
-            .catch( (err: Error) => {
-              logger.base.error(err.message, err); 
-              reject(jayson.server().error(null, err.message))
-            });
-        })
-
-      }
-
-    }
+    return config;
   }
 
 }
