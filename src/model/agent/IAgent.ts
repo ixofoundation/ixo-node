@@ -1,3 +1,6 @@
+import { Document, Schema, Model, model} from "mongoose";
+import {IAgentStatus} from './IAgentStatus'
+
 export interface IAgent {
   tx: String;
   did: String;
@@ -5,4 +8,6 @@ export interface IAgent {
   email: String;
   projectTx: String;
   role: String;
+  latestStatus: String;
+  statuses: IAgentStatus[];
 }

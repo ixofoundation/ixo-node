@@ -1,9 +1,13 @@
-import { Agent, IAgentModel } from '../model/agent/Agent';
+import { Agent, IAgentModel, AgentSchema } from '../model/agent/Agent';
+import { AgentStatus, IAgentStatusModel } from '../model/agent/AgentStatus';
+import { IAgentStatus } from '../model/agent/IAgentStatus';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
 import {IxoValidationError} from "../errors/IxoValidationError";
 import {TemplateHandler} from "./TemplateHandler";
 import {Request} from "../handlers/Request";
+import { IAgent } from '../model/agent/IAgent';
+
 
 declare var Promise: any;
 
@@ -27,7 +31,9 @@ export class AgentHandler {
                                                 }
                                               });
     }else{
-      throw new IxoValidationError("Template 'type' must be 'agent'");
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("Template 'type' must be 'agent'"));
+      })
     }
   }
 
@@ -46,32 +52,71 @@ export class AgentHandler {
           did: args.signature.creator
         };
         return Agent.create(obj);
-      })
+    })
+  }
+
+  updateAgentStatus = (args: any) => {
+    return new Promise((resolve: Function, reject: Function) => {
+      var request = new Request(args);
+      if(request.verifySignature()){
+        resolve(request);
+      }
+    }).then( (request: Request) => {
+      return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
+    }).then((transaction: ITransactionModel) => {
+      // Deep clone the data using JSON
+      var obj = {...args.payload.data,
+        tx: transaction.hash,
+        did: args.signature.creator
+      };
+      return Agent.findOne({"tx": obj.agentTx}).then((agent) => {
+        if(agent == null){
+          return new Promise((resolve: Function, reject: Function) => {
+            reject(new IxoValidationError("Agent: '" + obj.agentTx + "' does not exist"))
+          });
+        }else{
+          var agentStatus = new AgentStatus(obj);
+          return agentStatus.save().then( (agentStatus: any) => {
+            agent.statuses.push(agentStatus);
+            agent.latestStatus = agentStatus.status;
+            return agent.save();
+          })
+        }
+      });
+    });
   }
 
   list = (args: any) => {
     var request = new Request(args);
-    return Agent.find(request.data)
-      .sort('-created')
-      .exec();
+    var res = this.find(request.data);
+    return res;
   }
 
   listForDID = (args: any) => {
     var request = new Request(args);
-    if (request.data.did == undefined) throw Error("'did' not specified");
-    return Agent.find({ "did": request.data.did })
-      .sort('-created')
-      .exec();
+    if (request.data.did == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'did' not specified in params"));
+      })     
+    }
+    return this.find({ "did": request.data.did });
   }
 
   listForProject = (args: any) => {
     var request = new Request(args);
-    if (request.data.did == undefined) throw Error("'projectTx' not specified");
-    return Agent.find({ "projectTx": request.data.projectTx })
+    if (request.data.projectTx == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'projectTx' not specified"))
+      })
+    }
+    return this.find({ "projectTx": request.data.projectTx });
+  }
+
+  find = (criteria: any) => {
+    return Agent.find(criteria)
       .sort('-created')
       .exec();
   }
-
 
 }
 

@@ -4,6 +4,8 @@ import * as nacl from 'tweetnacl';
 import * as bs58 from 'bs58';
 
 var ethUtil = require('ethereumjs-util');
+var ethereumWallet = require('ethereumjs-wallet');
+
 
 export class CryptoUtils { 
   
@@ -62,6 +64,20 @@ export class CryptoUtils {
     }else{
       return key;
     }
+  }
+
+  generateWalletAndKeys(): any{
+    var wallet = ethereumWallet.generate();
+    return {
+      address: wallet.getAddressString(),
+      privateKey: wallet.getPrivateKeyString(),
+      publickKey: wallet.getPublicKeyString()
+    }
+  }
+
+  signECDSA(data: String, privateKey: String) : String{
+    var sig = ethUtil.ecsign(ethUtil.hashPersonalMessage(ethUtil.toBuffer(data)), ethUtil.toBuffer(privateKey));
+    return ethUtil.bufferToHex(Buffer.concat([sig.r, sig.s, ethUtil.toBuffer(sig.v - 27)]))
   }
 
 }

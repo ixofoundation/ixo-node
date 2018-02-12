@@ -6,9 +6,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import * as mongoose from 'mongoose';
 require('mongoose').Promise = global.Promise;
 
-import {PingHandler} from '../../src/handlers/PingHandler';
 import {ProjectHandler} from '../../src/handlers/ProjectHandler';
-import {TemplateHandler} from '../../src/handlers/TemplateHandler';
 import {Request} from '../../src/handlers/Request';
 import {IxoValidationError} from '../../src/errors/IxoValidationError';
 
