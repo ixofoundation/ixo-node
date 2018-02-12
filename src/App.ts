@@ -5,10 +5,11 @@ import * as bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import * as logger from './logger/Logger';
 
-import AgentRouter from './routes/AgentRouter';
 import NetworkRouter from './routes/NetworkRouter';
-import ProjectRouter from './routes/ProjectRouter';
 import TemplateRouter from './routes/TemplateRouter';
+import ProjectRouter from './routes/ProjectRouter';
+import AgentRouter from './routes/AgentRouter';
+import ClaimRouter from './routes/ClaimRouter';
 
 class App {
 
@@ -40,6 +41,7 @@ class App {
     this.express.use('/api/network', NetworkRouter);
     this.express.use('/api/project', ProjectRouter);
     this.express.use('/api/template', TemplateRouter);
+    this.express.use('/api/claim', ClaimRouter);
 
     this.express.use(logger.after);
 

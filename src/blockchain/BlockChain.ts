@@ -4,6 +4,10 @@ import {ITransaction} from './models/ITransaction';
 
 declare var Promise: any;
 
+/*
+Complete Stub of a blockchain simply here to create a transaction id
+ */
+
 export class BlockChain {
 
   emitter: EventEmitter;
