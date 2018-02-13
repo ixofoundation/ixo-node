@@ -1,6 +1,6 @@
 import { Document, Schema, Model, model} from "mongoose";
 
-import { ICEvaluation } from "./IEvaluation";
+import { IEvaluation } from "./IEvaluation";
 
 import {IxoValidationError} from "../../errors/IxoValidationError";
 
@@ -27,7 +27,7 @@ export var EvaluationSchema: Schema = new Schema({
     longitude: { type: Number },
     latitude: { type: Number }
   },
-  latestStatus: {
+  result: {
     type: String,
     required : true,
     default: 'Pending'
