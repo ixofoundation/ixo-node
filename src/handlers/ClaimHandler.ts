@@ -146,6 +146,16 @@ export class ClaimHandler {
     return this.find({ "projectTx": request.data.projectTx });
   }
 
+  listForProjectAndStatus = (args: any) => {
+    var request = new Request(args);
+    if (request.data.projectTx == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'projectTx' not specified"))
+      })
+    }
+    return this.find({ "projectTx": request.data.projectTx, latestEvaluation: request.data.evaluationnpm  });
+  }
+
   find = (criteria: any) => {
     return Claim.find(criteria)
       .sort('-created')
