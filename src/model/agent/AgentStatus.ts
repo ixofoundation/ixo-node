@@ -39,32 +39,9 @@ export var AgentStatusSchema: Schema = new Schema({
  }, {strict: false});   // Allow any other fields to also be included over and above the standard ones
 
  AgentStatusSchema.pre("save", function(this: IAgentStatus, next) {
-  validateUpdate(this.agentTx, this.did, this.status, (err: Error, ret: boolean) => {
-    if(err){
-      next(err);
-      return;
-    }
-    next();
-  });
+  next();
 });
 
 
 export const AgentStatus: Model<IAgentStatusModel> = model<IAgentStatusModel>("AgentStatus", AgentStatusSchema);
-
-
-// Check that the project owner is making this update
-function validateUpdate(agentTx: String, did: String, status: String, callback: Function){
-  Agent.findOne({"tx": agentTx}, (err, agent) => {
-    if(agent != null){
-      Project.findOne({"tx": agent.projectTx}, (err, project) => {
-        if(project && project.owner.did != did){
-          callback(new IxoValidationError("Only the project owner can update an agents status"), null);
-        }
-        callback(err, true);
-      })
-    }else{
-      callback(new IxoValidationError("Agent: '" + agentTx + "' does not exist"), null);
-    }
-  })
-}
 

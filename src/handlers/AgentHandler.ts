@@ -1,4 +1,5 @@
-import { Agent, IAgentModel, AgentSchema } from '../model/agent/Agent';
+import { Project, IProjectModel, ProjectSchema } from '../model/project/Project';
+import { Agent, IAgentModel, AgentSchema, AGENT_ROLE } from '../model/agent/Agent';
 import { AgentStatus, IAgentStatusModel } from '../model/agent/AgentStatus';
 import { IAgentStatus } from '../model/agent/IAgentStatus';
 import blockchain from '../blockchain/BlockChain';
@@ -38,12 +39,44 @@ export class AgentHandler {
   }
 
   create = (args: any) => {
+    var request = new Request(args);
     return new Promise((resolve: Function, reject: Function) => {
-      var request = new Request(args);
+      //Verify the signature
       if(request.verifySignature()){
         resolve(request);
       }
-    }).then( (request: Request) => {
+    })
+    .then( (request: Request) => {
+      //Validate the new Agent
+      return new Promise((resolve: Function, reject: Function) => {
+        // Check that a valid Project TX is supplied
+        Project.findOne({"tx": request.data.projectTx}, (err: any, proj:any) => {
+          if(proj == null){
+            reject(new IxoValidationError("ProjectTx: '" + request.data.projectTx + "' is invalid"));
+          }else{
+            // Check that the Agent is not already registered as that role on the project and 
+            // ensure the Agent cannot be a SA and a EA on the same project
+            Agent.find({"projectTx": request.data.projectTx, "did": request.did}, (err, agents) => {
+              agents.forEach((agent) => {
+                var role = request.data.role;
+                if(agent.role == role) {
+                  reject(new IxoValidationError("Agent: '" + request.did + "' already exists on the project"));
+                  return
+                }
+                  // Ensure agent is not an EA and SA
+                if((agent.role == AGENT_ROLE.SA && role == AGENT_ROLE.EA)
+                    || (agent.role == AGENT_ROLE.EA && role == AGENT_ROLE.SA)) {
+                  reject(new IxoValidationError('An agent cannot be a Service Agent and an Evaluation agent on the same project'));
+                  return
+                }
+              })
+              resolve(request);
+            })
+          }
+        })
+      })
+    })
+    .then( (request: Request) => {
       return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
     }).then((transaction: ITransactionModel) => {
         // Deep clone the data using JSON
@@ -61,6 +94,27 @@ export class AgentHandler {
       if(request.verifySignature()){
         resolve(request);
       }
+    }).then( (request: Request) => {
+      //Validate the status change
+      return new Promise((resolve: Function, reject: Function) => {
+        // Check that the project owner is making this update
+        Agent.findOne({"tx": request.data.agentTx}, (err, agent) => {
+          if(agent != null){
+            Project.findOne({"tx": agent.projectTx}, (err, project) => {
+              if(project && project.owner.did == request.did){
+                resolve(request);
+              }else{
+                reject(new IxoValidationError("Only the project owner can update an agents status"));
+                return;
+              }
+            })
+          }else{
+            reject(new IxoValidationError("Agent: '" + request.data.agentTx + "' does not exist"));
+            return;
+          }
+        })
+      })
+
     }).then( (request: Request) => {
       return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
     }).then((transaction: ITransactionModel) => {
