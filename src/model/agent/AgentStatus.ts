@@ -33,7 +33,7 @@ export var AgentStatusSchema: Schema = new Schema({
   },
   status: {
     type: String,
-    validate: function(status: String){return [AGENT_STATUS.Approved,AGENT_STATUS.NotApproved].indexOf(status.toString())!= -1},
+    validate: function(status: String){return Object.keys(AGENT_STATUS).indexOf(status.toString())!= -1},
     required : true
   }
  }, {strict: false});   // Allow any other fields to also be included over and above the standard ones

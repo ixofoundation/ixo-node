@@ -153,7 +153,17 @@ export class ClaimHandler {
         reject(new IxoValidationError("'projectTx' not specified"))
       })
     }
-    return this.find({ "projectTx": request.data.projectTx, latestEvaluation: request.data.evaluationnpm  });
+    return this.find({ "projectTx": request.data.projectTx, latestEvaluation: request.data.status  });
+  }
+
+  listForProjectAndDID = (args: any) => {
+    var request = new Request(args);
+    if (request.data.projectTx == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'projectTx' not specified"))
+      })
+    }
+    return this.find({ "projectTx": request.data.projectTx, did: request.data.did  });
   }
 
   find = (criteria: any) => {

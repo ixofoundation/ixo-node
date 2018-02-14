@@ -8,6 +8,7 @@ require('mongoose').Promise = global.Promise;
 
 import {Project, IProjectModel} from '../../src/model/project/Project';
 import {Agent, IAgentModel} from '../../src/model/agent/Agent';
+import {Evaluation, IEvaluationModel, EVALUATION_STATUS} from '../../src/model/claim/Evaluation';
 import {ClaimHandler} from '../../src/handlers/ClaimHandler';
 import {Request} from '../../src/handlers/Request';
 import {IxoValidationError} from '../../src/errors/IxoValidationError';
@@ -159,7 +160,7 @@ describe('ClaimHandler', function () {
                 })
             })
             .then((res) => {
-                var payload = {"data":{"claimTx":res.tx,"result":"Approved"},"did":wallet2.address};
+                var payload = {"data":{"claimTx":res.tx,"result":EVALUATION_STATUS.Approved},"did":wallet2.address};
                 var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet2.privateKey);
                 return new ClaimHandler().evaluateClaim({
                     "payload":payload,
@@ -173,9 +174,10 @@ describe('ClaimHandler', function () {
             })
             .then((res) => {
                 expect(res['evaluations'].length).to.equal(1);
-                return expect(res['latestEvaluation']).to.equal('Approved');
+                return expect(res['latestEvaluation']).to.equal(EVALUATION_STATUS.Approved);
             });
         });
+
         it('should fail evaluation as agent is not a EA', function () {
             return Project.create(projectData)
             .then( (project) => {
@@ -195,7 +197,7 @@ describe('ClaimHandler', function () {
                 })
             })
             .then((res) => {
-                var payload = {"data":{"claimTx":res.tx,"result":"Approved"},"did":wallet.address};
+                var payload = {"data":{"claimTx":res.tx,"result":EVALUATION_STATUS.Approved},"did":wallet.address};
                 var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
                 return new ClaimHandler().evaluateClaim({
                     "payload":payload,
@@ -307,104 +309,65 @@ describe('ClaimHandler', function () {
             });
         });
     });
-
-});
-
-/*
-   describe('authoriseAgent()', function () {
-        this.timeout(15000);
-        it('should authorise an agent', function () {
-            return Project.create(obj)
-            .then((res) => {
-                var payload = {"data":{"email":"joe@bloggs.com","name":"Joe Blogs","role":"SA","projectTx":"88aa881cf8b89ccba4ab22b574169097374b6eaf0d6f6f1dcf7447128a96caa5"},"did":wallet.address};
-                var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
-                return new AgentHandler().create({
-                    "payload":payload,
-                    "signature":{
-                        "type":"ECDSA",
-                        "creator":wallet.address,
-                        "created":"2016-02-08T16:02:20Z",
-                        "signature":signature
-                    }
-                })
-            })
-            .then((res) => {
-                var payload = {"data":{"agentTx":res.tx,"status":"Approved"},"did":wallet.address};
-                var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
-                return new AgentHandler().updateAgentStatus({
-                    "payload":payload,
-                    "signature":{
-                        "type":"ECDSA",
-                        "creator":wallet.address,
-                        "created":"2016-02-08T16:02:20Z",
-                        "signature":signature
-                    }
-                })
-            })
-            .then((res) => {
-                expect(res['statuses'].length).to.equal(1);
-                return expect(res['latestStatus']).to.equal('Approved');
-            });
-        });
-
-        it('should not authorise an agent - invalid project owner', function () {
-            return Project.create(obj)
-            .then((res) => {
-                var payload = {"data":{"email":"joe@bloggs.com","name":"Joe Blogs","role":"SA","projectTx":"88aa881cf8b89ccba4ab22b574169097374b6eaf0d6f6f1dcf7447128a96caa5"},"did":wallet.address};
-                var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
-                return new AgentHandler().create({
-                    "payload":payload,
-                    "signature":{
-                        "type":"ECDSA",
-                        "creator":wallet.address,
-                        "created":"2016-02-08T16:02:20Z",
-                        "signature":signature
-                    }
-                })
-            })
-            .then((res) => {
-                var payload = {"data":{"agentTx":res.tx,"status":"Approved"},"did":wallet2.address};
-                var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet2.privateKey);
-                return new AgentHandler().updateAgentStatus({
-                    "payload":payload,
-                    "signature":{
-                        "type":"ECDSA",
-                        "creator":wallet2.address,
-                        "created":"2016-02-08T16:02:20Z",
-                        "signature":signature
-                    }
-                })
-            })
-            .catch((err) => {
-                return expect(err.message).to.equal('Only the project owner can update an agents status');
-            });
-        });
-    });
-
-    describe('list()', function () {
+    describe('listForProjectAndStatus()', function () {
         this.timeout(15000);
         
-        it('should list agents', function () {
-            return Project.create(obj)
-            .then((res) => {
-                return new AgentHandler().create({
-                    "payload":{"data":{"email":"joe@bloggs.com","name":"Joe Blogs","role":"SA","projectTx":"88aa881cf8b89ccba4ab22b574169097374b6eaf0d6f6f1dcf7447128a96caa5"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},
-                    "signature":{
-                        "type":"ECDSA",
-                        "creator":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d",
-                        "created":"2016-02-08T16:02:20Z",
-                        "signature":"0xedf2ac62d9e2c59d4e8e9be77bceaa0b506cd1dca90498b9c1dd6313a1803c28532cf3ee3a86c8afba197633fd3fd8fca6b35c27a52c6d413898c6ed86c7cc281c"
-                    }
-                })
-            })
-           .then((res) => {
-                return new AgentHandler().list({
-                    "payload":{"data": {},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
-                    .then((res) => {
-                        return expect(res.length).to.equal(1);
+        it('should listForProjectStatus', function () {
+            return Project.create(projectData)
+            .then( (project) => {
+                return Agent.create(agentData)
+                .then((agent) => {
+                    var payload = {"data":{"name":"Sipho","attended":true,"projectTx":projectData.tx},"did":wallet.address};
+                    var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
+                    return new ClaimHandler().create({
+                        "payload":payload,
+                        "signature":{
+                            "type":"ECDSA",
+                            "creator":wallet.address,
+                            "created":"2016-02-08T16:02:20Z",
+                            "signature":signature
+                        }
                     })
+                    .then((res) => {
+                        return new ClaimHandler().listForProjectAndStatus({
+                            "payload":{"data": {"projectTx":projectData.tx, status: EVALUATION_STATUS.Pending},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+                        .then((res) => {
+                            return expect(res.length).to.equal(1);
+                        })
+                    })
+                })
             });
         });
     });
+    describe('listForProjectAndDID()', function () {
+        this.timeout(15000);
+        
+        it('should listForProjectDID', function () {
+            return Project.create(projectData)
+            .then( (project) => {
+                return Agent.create(agentData)
+                .then((agent) => {
+                    var payload = {"data":{"name":"Sipho","attended":true,"projectTx":projectData.tx},"did":wallet.address};
+                    var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
+                    return new ClaimHandler().create({
+                        "payload":payload,
+                        "signature":{
+                            "type":"ECDSA",
+                            "creator":wallet.address,
+                            "created":"2016-02-08T16:02:20Z",
+                            "signature":signature
+                        }
+                    })
+                    .then((res) => {
+                        return new ClaimHandler().listForProjectAndDID({
+                            "payload":{"data": {"projectTx":projectData.tx, did: wallet.address},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+                        .then((res) => {
+                            return expect(res.length).to.equal(1);
+                        })
+                    })
+                })
+            });
+        });
+    })
+});
 
-*/

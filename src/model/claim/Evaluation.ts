@@ -4,6 +4,8 @@ import { IEvaluation } from "./IEvaluation";
 
 import {IxoValidationError} from "../../errors/IxoValidationError";
 
+export var EVALUATION_STATUS = Object.freeze({'Pending': 'Pending', 'Approved': 'Approved', 'NotApproved': 'Not Approved'});
+
 export interface IEvaluationModel extends IEvaluation, Document {
 }
 
