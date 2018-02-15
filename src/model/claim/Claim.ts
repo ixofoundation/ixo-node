@@ -1,5 +1,5 @@
 import { Document, Schema, Model, model} from "mongoose";
-import {Evaluation, IEvaluationModel} from '../claim/Evaluation';
+import {Evaluation, IEvaluationModel, EVALUATION_STATUS} from '../claim/Evaluation';
 
 import { IClaim } from "./IClaim";
 
@@ -36,7 +36,7 @@ export var ClaimSchema: Schema = new Schema({
   latestEvaluation: {
     type: String,
     required : true,
-    default: 'Pending'
+    default: EVALUATION_STATUS.Pending
   },
   evaluations: [{
       type: Schema.Types.ObjectId,
