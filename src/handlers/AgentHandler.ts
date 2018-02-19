@@ -1,6 +1,6 @@
 import { Project, IProjectModel, ProjectSchema } from '../model/project/Project';
 import { Agent, IAgentModel, AgentSchema, AGENT_ROLE } from '../model/agent/Agent';
-import { AgentStatus, IAgentStatusModel } from '../model/agent/AgentStatus';
+import { AgentStatus, IAgentStatusModel, AGENT_STATUS } from '../model/agent/AgentStatus';
 import { IAgentStatus } from '../model/agent/IAgentStatus';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
@@ -57,8 +57,8 @@ export class AgentHandler {
             // Check that the Agent is not already registered as that role on the project and 
             // ensure the Agent cannot be a SA and a EA on the same project
             Agent.find({"projectTx": request.data.projectTx, "did": request.did}, (err, agents) => {
+              var role = request.data.role;
               agents.forEach((agent) => {
-                var role = request.data.role;
                 if(agent.role == role) {
                   reject(new IxoValidationError("Agent: '" + request.did + "' already exists on the project"));
                   return
@@ -70,7 +70,16 @@ export class AgentHandler {
                   return
                 }
               })
-              resolve(request);
+              // Sets the Status of the Agent
+              var latestStatus = AGENT_STATUS.Pending;
+              if(proj.autoApproveInvestmentAgent && role == AGENT_ROLE.IA){
+                latestStatus = AGENT_STATUS.Approved;
+              }else if(proj.autoApproveServiceAgent && role == AGENT_ROLE.SA){
+                latestStatus = AGENT_STATUS.Approved;
+              }else if(proj.autoApproveEvaluationAgent && role == AGENT_ROLE.EA){
+                latestStatus = AGENT_STATUS.Approved;
+              }
+              resolve({...request, 'latestStatus': latestStatus});
             })
           }
         })
