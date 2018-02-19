@@ -21,14 +21,28 @@ var wallet2 = cryptoUtils.generateWalletAndKeys();
 chai.use(chaiAsPromised);
 
 describe('ClaimHandler', function () {
-    var projectData = {
-        owner:{
-            email:"joe@bloggs.com",
-            name:"Joe Blogs",
+    var projectData = 
+        {"owner":{
+            "email":"joe@bloggs.com",
+            "name":"Joe Blogs",
             did: wallet.address
         },
-        name:"Water Saving",
-        country:"ZA",
+        "name":"Water Saving",
+        "country":"ZA", 
+        "about":"A project", 
+        "agentTemplate": {
+            "name": "default"
+        },
+        "claimTemplate": {
+            "name": "default"
+        },
+        "evaluationTemplate": {
+            "name": "default"
+        },
+        "numberOfSuccessfulClaims": 10,
+        "autoApproveInvestmentAgent": false,
+        "autoApproveServiceAgent": false,
+        "autoApproveEvaluationAgent": false,
         tx: "88aa881cf8b89ccba4ab22b574169097374b6eaf0d6f6f1dcf7447128a96caa5"
     };
 

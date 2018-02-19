@@ -1,10 +1,23 @@
 export interface IProject {
   tx: String;
-  owner: {
-    did: String;
-    name: String;
-    email: String;
-  }
   name: String;
   country: String;
+  owner: {
+    did: String;
+  }
+  about: String;
+  agentTemplate: {
+    name: String;
+  },
+  autoApproveInvestmentAgent: Boolean;
+  autoApproveServiceAgent: Boolean;
+  autoApproveEvaluationAgent: Boolean;
+  numberOfSuccessfulClaims: Number;
+  claimTemplate: {
+    name: String;
+  },
+  evaluationTemplate: {
+    name: String;
+  },
+
 }

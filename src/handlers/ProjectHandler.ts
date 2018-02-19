@@ -4,7 +4,7 @@ import { ITransactionModel } from '../blockchain/models/Transaction';
 import {IxoValidationError} from "../errors/IxoValidationError";
 import {TemplateHandler} from "./TemplateHandler";
 import {Request} from "./Request";
-
+const dot = require("dot-object");
 
 declare var Promise: any;
 
@@ -46,9 +46,10 @@ export class ProjectHandler {
         // Deep clone the data using JSON
         var obj = {...args.payload.data,
           tx: transaction.hash,
-          owner: {...args.payload.data.owner,
-            did: args.signature.creator}
         }
+        console.log("1:" + JSON.stringify(obj));
+        dot.set('owner.did', args.signature.creator, obj);
+        console.log("2:" + JSON.stringify(obj));
         return Project.create(obj);
       })
   }
