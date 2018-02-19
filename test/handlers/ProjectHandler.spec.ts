@@ -9,6 +9,11 @@ require('mongoose').Promise = global.Promise;
 import {ProjectHandler} from '../../src/handlers/ProjectHandler';
 import {Request} from '../../src/handlers/Request';
 import {IxoValidationError} from '../../src/errors/IxoValidationError';
+import {CryptoUtils} from '../../src/utils/CryptoUtils';
+
+var cryptoUtils = new CryptoUtils();
+var wallet = cryptoUtils.generateWalletAndKeys();
+var wallet2 = cryptoUtils.generateWalletAndKeys();
 
 chai.use(chaiAsPromised);
 
@@ -29,6 +34,30 @@ afterEach(function (done) {
 
   
 describe('ProjectHandler', function () {
+    var payload = {"data":
+        {"owner":{
+            "email":"joe@bloggs.com",
+            "name":"Joe Blogs"
+        },
+        "name":"Water Saving",
+        "country":"ZA", 
+        "about":"A project", 
+        "agentTemplate": {
+            "name": "default"
+        },
+        "claimTemplate": {
+            "name": "default"
+        },
+        "evaluationTemplate": {
+            "name": "default"
+        },
+        "numberOfSuccessfulClaims": 10,
+        "autoApproveInvestmentAgent": true,
+        "autoApproveServiceAgent": true,
+        "autoApproveEvaluationAgent": true,
+    },"did":wallet.address};
+
+
     describe('getTemplate()', function () {
         this.timeout(5000);
         it('should return "default" project template and form', function () {
@@ -50,13 +79,14 @@ describe('ProjectHandler', function () {
     describe('create()', function () {
         this.timeout(15000);
         it('should create a project', function () {
+            var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
             return new ProjectHandler().create({
-                "payload":{"data": {"owner":{"email":"joe@bloggs.com","name":"Joe Blogs"},"name":"Water Saving","country":"ZA"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},
+                "payload": payload,
                 "signature":{
                     "type":"ECDSA",
-                    "creator":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d",
+                    "creator":wallet.address,
                     "created":"2016-02-08T16:02:20Z",
-                    "signature":"0xd007781b71c7a17d8dc0575ebd186646f256a565b0964997157c01625e4346fa3b4b1686ba004f18ee46106f5415d450c26af3da6ec9cf88e2b25e6fcf3785f81b"
+                    "signature":signature
                 }})
                 .then((res) => {
                     return expect(res['name']).to.equal('Water Saving');
@@ -69,17 +99,18 @@ describe('ProjectHandler', function () {
         
         it('should list projects', function () {
             // Add a project
+            var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
             return new ProjectHandler().create({
-                "payload":{"data": {"owner":{"email":"joe@bloggs.com","name":"Joe Blogs"},"name":"Water Saving","country":"ZA"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},
+                "payload":payload,
                 "signature":{
                     "type":"ECDSA",
-                    "creator":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d",
+                    "creator":wallet.address,
                     "created":"2016-02-08T16:02:20Z",
-                    "signature":"0xd007781b71c7a17d8dc0575ebd186646f256a565b0964997157c01625e4346fa3b4b1686ba004f18ee46106f5415d450c26af3da6ec9cf88e2b25e6fcf3785f81b"
+                    "signature":signature
                 }})
                 .then((res) => {
                     return new ProjectHandler().list({
-                        "payload":{"data": {},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+                        "payload":{"data": {},"did":wallet.address}})
                         .then((res) => {
                             return expect(res.length).to.equal(1);
                         })
@@ -92,17 +123,18 @@ describe('ProjectHandler', function () {
         
         it('should listForDID projects for valid did', function () {
             // Add a project
+            var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
             return new ProjectHandler().create({
-                "payload":{"data": {"owner":{"email":"joe@bloggs.com","name":"Joe Blogs"},"name":"Water Saving","country":"ZA"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},
+                "payload":payload,
                 "signature":{
                     "type":"ECDSA",
-                    "creator":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d",
+                    "creator":wallet.address,
                     "created":"2016-02-08T16:02:20Z",
-                    "signature":"0xd007781b71c7a17d8dc0575ebd186646f256a565b0964997157c01625e4346fa3b4b1686ba004f18ee46106f5415d450c26af3da6ec9cf88e2b25e6fcf3785f81b"
+                    "signature":signature
                 }})
                 .then((res) => {
                     return new ProjectHandler().listForDID({
-                        "payload":{"data": {"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+                        "payload":{"data": {"did":wallet.address},"did":wallet.address}})
                         .then((res) => {
                             return expect(res.length).to.equal(1);
                         });
@@ -114,18 +146,18 @@ describe('ProjectHandler', function () {
         this.timeout(15000);
         
         it('should listForDID projects for invalid did', function () {
-            // Add a project
+            var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
             return new ProjectHandler().create({
-                "payload":{"data": {"owner":{"email":"joe@bloggs.com","name":"Joe Blogs"},"name":"Water Saving","country":"ZA"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"},
+                "payload":payload,
                 "signature":{
                     "type":"ECDSA",
-                    "creator":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d",
+                    "creator":wallet.address,
                     "created":"2016-02-08T16:02:20Z",
-                    "signature":"0xd007781b71c7a17d8dc0575ebd186646f256a565b0964997157c01625e4346fa3b4b1686ba004f18ee46106f5415d450c26af3da6ec9cf88e2b25e6fcf3785f81b"
+                    "signature":signature
                 }})
                 .then((res) => {
                     return new ProjectHandler().listForDID({
-                        "payload":{"data": {"did":"0x635421000008dbad88b1e772bf5b8f91bf000000"},"did":"0x92928b5135d8dbad88b1e772bf5b8f91bfe41a8d"}})
+                        "payload":{"data": {"did":wallet2.address},"did":wallet.address}})
                         .then((res) => {
                             return expect(res.length).to.equal(0);
                         })
