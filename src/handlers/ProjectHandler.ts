@@ -1,4 +1,5 @@
 import {Project, IProjectModel} from '../model/project/Project';
+import {Agent, IAgentModel} from '../model/agent/Agent';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
 import {IxoValidationError} from "../errors/IxoValidationError";
@@ -47,18 +48,14 @@ export class ProjectHandler {
         var obj = {...args.payload.data,
           tx: transaction.hash,
         }
-        console.log("1:" + JSON.stringify(obj));
         dot.set('owner.did', args.signature.creator, obj);
-        console.log("2:" + JSON.stringify(obj));
         return Project.create(obj);
       })
   }
 
   list = (args: any) => {
     var request = new Request(args);
-    return Project.find(request.data)
-      .sort('-created')
-      .exec();
+    return this.find(request.data);
   }
 
   listForDID = (args: any) => {
@@ -68,11 +65,36 @@ export class ProjectHandler {
         reject(new IxoValidationError("'did' not specified in params"));
       })
     }else{
-      return Project.find({"owner.did": request.data.did})
-        .sort('-created')
-        .exec();
+      return this.find({"owner.did": request.data.did});
     }
   }
+
+  listForAgentDIDAndRole = (args: any) => {
+    var request = new Request(args);
+    if(request.data.did == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'did' not specified in params"));
+      })
+    }else if(request.data.role == undefined){
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("'role' not specified in params"));
+      })
+    }
+
+    return Agent.find(
+      {
+        did:request.data.did, 
+        role:request.data.role
+      }).then((agents)=> agents.map(function(a){return a.projectTx}))
+      .then((projectTxs) => this.find({'tx': {$in: projectTxs}}))
+  }
+
+  find = (criteria: any) => {
+    return Project.find(criteria)
+      .sort('-created')
+      .exec();
+  }
+
 
 
 }

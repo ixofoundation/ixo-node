@@ -7,9 +7,11 @@ import * as mongoose from 'mongoose';
 require('mongoose').Promise = global.Promise;
 
 import {ProjectHandler} from '../../src/handlers/ProjectHandler';
+
 import {Request} from '../../src/handlers/Request';
 import {IxoValidationError} from '../../src/errors/IxoValidationError';
 import {CryptoUtils} from '../../src/utils/CryptoUtils';
+import { Agent } from '../../src/model/agent/Agent';
 
 var cryptoUtils = new CryptoUtils();
 var wallet = cryptoUtils.generateWalletAndKeys();
@@ -165,5 +167,30 @@ describe('ProjectHandler', function () {
         });
     });
 
+    describe('listForAgentDIDAndRole()', function () {
+        this.timeout(15000);
+        
+        it('should listForAgentDIDAndRole projects for valid did and role', function () {
+            var signature = cryptoUtils.signECDSA(JSON.stringify(payload), wallet.privateKey);
+            return new ProjectHandler().create({
+                "payload":payload,
+                "signature":{
+                    "type":"ECDSA",
+                    "creator":wallet.address,
+                    "created":"2016-02-08T16:02:20Z",
+                    "signature":signature
+                }}).then((proj)=> {
+                    var agent = {"did":wallet2.address,"email":"joe@bloggs.com","name":"Joe Blogs","role":"SA","projectTx":proj.tx};
+                    return Agent.create(agent);  
+                })
+                .then((res) => {
+                    return new ProjectHandler().listForAgentDIDAndRole({
+                        "payload":{"data": {"did":wallet2.address, "role":'SA'},"did":wallet.address}})
+                        .then((res) => {
+                            return expect(res.length).to.equal(1);
+                        })
+                });
+        });
+    });
 });
 
