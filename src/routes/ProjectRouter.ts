@@ -19,6 +19,8 @@ export class ProjectRouter extends AbstractRouter{
     this.register(config, "create", handler.create);
     this.register(config, "list", handler.list);
     this.register(config, "listForDID", handler.listForDID);
+    this.register(config, "listForAgentDIDAndRole", handler.listForAgentDIDAndRole);
+
 
     return config;
   }
