@@ -38,6 +38,24 @@ export class ClaimHandler {
     }
   }
 
+  getEvaluationTemplate = (args: any) => {
+    var request = new Request(args);
+    if(request.data.type == undefined || request.data.type == "evaluation"){
+      let newArgs = {...args.payload.data,
+        type: "claim"
+      };
+      return this.templateHandler.getTemplate({
+                                                payload: {
+                                                  data: newArgs
+                                                }
+                                              });
+    }else{
+      return new Promise((resolve: Function, reject: Function) => {
+        reject(new IxoValidationError("Template 'type' must be 'evaluation'"));
+      })
+    }
+  }
+
   create = (args: any) => {
     return new Promise((resolve: Function, reject: Function) => {
       var request = new Request(args);

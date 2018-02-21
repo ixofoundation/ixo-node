@@ -11,8 +11,9 @@ export class ClaimRouter extends AbstractRouter{
 
     const handler = new ClaimHandler();
     this.register(config, "getTemplate", handler.getTemplate);
+    this.register(config, "getEvaluationTemplate", handler.getTemplate);
     this.register(config, "create", handler.create);
-//    this.register(config, "updateClaimStatus", handler.updateClaimStatus);
+    this.register(config, "evaluateClaim", handler.evaluateClaim);
     this.register(config, "listForDID", handler.listForDID);
     this.register(config, "listForProject", handler.listForProject);
 
