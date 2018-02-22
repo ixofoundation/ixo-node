@@ -1,10 +1,12 @@
 import {Project, IProjectModel} from '../model/project/Project';
 import {Agent, IAgentModel} from '../model/agent/Agent';
+import {Claim, IClaimModel} from '../model/claim/Claim';
 import blockchain from '../blockchain/BlockChain';
 import { ITransactionModel } from '../blockchain/models/Transaction';
 import {IxoValidationError} from "../errors/IxoValidationError";
 import {TemplateHandler} from "./TemplateHandler";
 import {Request} from "./Request";
+import { claimCountQuery } from './mongo/claimCounts';
 const dot = require("dot-object");
 
 declare var Promise: any;
@@ -92,11 +94,31 @@ export class ProjectHandler {
   find = (criteria: any) => {
     return Project.find(criteria)
       .sort('-created')
-      .exec();
+      .then((projects) => {
+        var results = <any>[];
+        return Claim.aggregate(claimCountQuery)
+        // Get claim counts
+        .then((claimCounts: any)=> {
+          projects.map((project: any)=>{
+            var pendingClaimCount = 0;
+            var approvedClaimCount = 0;
+            var notApprovedClaimCount = 0;
+            // Filter counts for this project
+            var counts = claimCounts.filter((o : any) => {return o._id == project.tx});
+            if(counts && counts.length > 0){
+              var count = counts[0];
+              pendingClaimCount = count.pending;
+              approvedClaimCount = count.approved;
+              notApprovedClaimCount = count.notApproved;
+            }
+            results.push({...project, pendingClaimCount: pendingClaimCount, approvedClaimCount: approvedClaimCount, notApprovedClaimCount: notApprovedClaimCount});
+          })
+          return results;
+        });
+      });
   }
 
-
-
+  
 }
 
 
