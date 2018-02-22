@@ -111,7 +111,7 @@ export class ProjectHandler {
               approvedClaimCount = count.approved;
               notApprovedClaimCount = count.notApproved;
             }
-            results.push({...project, pendingClaimCount: pendingClaimCount, approvedClaimCount: approvedClaimCount, notApprovedClaimCount: notApprovedClaimCount});
+            results.push({...project._doc, pendingClaimCount: pendingClaimCount, approvedClaimCount: approvedClaimCount, notApprovedClaimCount: notApprovedClaimCount});
           })
           return results;
         });
