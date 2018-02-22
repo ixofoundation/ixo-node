@@ -42,7 +42,7 @@ export class ClaimHandler {
     var request = new Request(args);
     if(request.data.type == undefined || request.data.type == "evaluation"){
       let newArgs = {...args.payload.data,
-        type: "claim"
+        type: "evaluation"
       };
       return this.templateHandler.getTemplate({
                                                 payload: {
@@ -191,55 +191,3 @@ export class ClaimHandler {
   }
 
 }
-
-/*
-  updateAgentStatus = (args: any) => {
-    return new Promise((resolve: Function, reject: Function) => {
-      var request = new Request(args);
-      if(request.verifySignature()){
-        resolve(request);
-      }
-    }).then( (request: Request) => {
-      return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
-    }).then((transaction: ITransactionModel) => {
-      // Deep clone the data using JSON
-      var obj = {...args.payload.data,
-        tx: transaction.hash,
-        did: args.signature.creator
-      };
-      return Agent.findOne({"tx": obj.agentTx}).then((agent) => {
-        if(agent == null){
-          return new Promise((resolve: Function, reject: Function) => {
-            reject(new IxoValidationError("Agent: '" + obj.agentTx + "' does not exist"))
-          });
-        }else{
-          var agentStatus = new AgentStatus(obj);
-          return agentStatus.save().then( (agentStatus: any) => {
-            agent.statuses.push(agentStatus);
-            agent.latestStatus = agentStatus.status;
-            return agent.save();
-          })
-        }
-      });
-    });
-  }
-
-  list = (args: any) => {
-    var request = new Request(args);
-    var res = this.find(request.data);
-    return res;
-  }
-
-  listForDID = (args: any) => {
-    var request = new Request(args);
-    if (request.data.did == undefined){
-      return new Promise((resolve: Function, reject: Function) => {
-        reject(new IxoValidationError("'did' not specified in params"));
-      })     
-    }
-    return this.find({ "did": request.data.did });
-  }
-*/
-
-
-
