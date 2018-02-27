@@ -31,9 +31,13 @@ export class Request {
     if(this.did != this.signature.creator){
       throw new IxoValidationError("'did' in payload is not the signature creator");
     }
-    if(!cryptoUtils.validateSignature(this.payload, this.signature.type, this.signature.signature, this.signature.creator)){
+    if(!this.signature.publicKey) 
+      this.signature.publicKey = this.signature.creator;
+    console.log("Request: " + JSON.stringify(this.signature));
+    if(!cryptoUtils.validateSignature(this.payload, this.signature.type, this.signature.signature, this.signature.publicKey)){
       throw new IxoValidationError("Invalid request input signature '" + this.payload);
     }
+    console.log("Request.verifySignature: return true");
     return true;
   }
 

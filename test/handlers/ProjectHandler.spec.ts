@@ -146,7 +146,6 @@ describe('ProjectHandler', function () {
                     return new ProjectHandler().list({
                         "payload":{"data": {},"did":wallet.address}})
                         .then((res: any) => {
-                            console.log(res);
                             expect(1).to.equal(res.length);
                             expect(2).to.equal(res[0]['pendingClaimCount']);
                             expect(5).to.equal(res[0]['approvedClaimCount']);
