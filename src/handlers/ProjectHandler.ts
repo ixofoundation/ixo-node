@@ -44,7 +44,7 @@ export class ProjectHandler {
         resolve(request);
       }
     }).then( (request: Request) => {
-      return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.creator)
+      return blockchain.createTransaction(request.payload, request.signature.type, request.signature.signature, request.signature.publicKey)
     }).then((transaction: ITransactionModel) => {
         // Deep clone the data using JSON
         var obj = {...args.payload.data,

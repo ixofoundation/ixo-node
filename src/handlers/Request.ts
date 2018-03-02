@@ -12,6 +12,7 @@ export class Request {
   did: string;
 
   constructor(requestData: any){
+    console.log(JSON.stringify(requestData));
     this.payload = JSON.stringify(requestData.payload);
     this.did = requestData.payload.did;
     this.data = requestData.payload.data;
@@ -28,7 +29,7 @@ export class Request {
     if(!this.hasSignature){
       throw new IxoValidationError("Signature is not present in request");
     }
-    if(this.did != this.signature.creator){
+    if(cryptoUtils.remove0x(this.did) != cryptoUtils.remove0x(this.signature.creator)){
       throw new IxoValidationError("'did' in payload is not the signature creator");
     }
     if(!this.signature.publicKey) 
