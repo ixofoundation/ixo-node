@@ -19,5 +19,7 @@ export interface IProject {
   evaluationTemplate: {
     name: String;
   },
-
+  sdg: {
+    name: String;
+  }
 }

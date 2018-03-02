@@ -73,6 +73,12 @@ export var ProjectSchema: Schema = new Schema({
       required: true
     }
   },
+  sdg: {
+    name: {
+      type: String,
+      required: true
+    }
+  }
 
 }, {strict: false});   // Allow any other fields to also be included over and above the standard ones
 

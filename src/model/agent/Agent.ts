@@ -52,7 +52,7 @@ export var AgentSchema: Schema = new Schema({
       ref: 'AgentStatus'
     }
   ]
- }, {strict: false});   // Allow any other fields to also be included over and above the standard ones
+ }, {strict: false , usePushEach: true});   // Allow any other fields to also be included over and above the standard ones
 
  AgentSchema.pre("save", function(this: IAgent, next) {
   next();

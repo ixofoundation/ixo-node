@@ -27,7 +27,6 @@ export class CryptoUtils {
   }
 
   validateEd25519Signature(data: String, signature: String, publicKey: String): Boolean{
-    console.log("validate: publicKey=" + publicKey);
     var decodedKey = new Uint8Array(bs58.decode(this.remove0x(publicKey).toString()));
     var signatureBuffer = new Uint8Array(bs58.decode(this.remove0x(signature).toString()));
     var recoveredMsgBuffer = nacl.sign.open(signatureBuffer, decodedKey) || new Buffer("");

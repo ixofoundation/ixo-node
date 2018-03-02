@@ -37,6 +37,9 @@ describe('AgentHandler', function () {
         "evaluationTemplate": {
             "name": "default"
         },
+        "sdg":{
+            "name": "12.6.7"
+        },
         "numberOfSuccessfulClaims": 10,
         "autoApproveInvestmentAgent": false,
         "autoApproveServiceAgent": false,

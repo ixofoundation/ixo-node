@@ -43,7 +43,7 @@ export var ClaimSchema: Schema = new Schema({
       ref: 'Evaluation'
     }
   ]
-}, {strict: false});   // Allow any other fields to also be included over and above the standard ones
+}, {strict: false, usePushEach: true});   // Allow any other fields to also be included over and above the standard ones
 
 ClaimSchema.pre("save", function(this: IClaim, next) {
     next();

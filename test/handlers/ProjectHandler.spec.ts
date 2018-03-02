@@ -54,6 +54,9 @@ describe('ProjectHandler', function () {
         "evaluationTemplate": {
             "name": "default"
         },
+        "sdg":{
+            "name": "no poverty"
+        },
         "numberOfSuccessfulClaims": 10,
         "autoApproveInvestmentAgent": true,
         "autoApproveServiceAgent": true,

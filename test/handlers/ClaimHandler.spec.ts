@@ -39,6 +39,9 @@ describe('ClaimHandler', function () {
         "evaluationTemplate": {
             "name": "default"
         },
+        "sdg":{
+            "name": "no poverty"
+        },
         "numberOfSuccessfulClaims": 10,
         "autoApproveInvestmentAgent": false,
         "autoApproveServiceAgent": false,

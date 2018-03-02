@@ -12,7 +12,6 @@ export class Request {
   did: string;
 
   constructor(requestData: any){
-    console.log(JSON.stringify(requestData));
     this.payload = JSON.stringify(requestData.payload);
     this.did = requestData.payload.did;
     this.data = requestData.payload.data;
@@ -34,11 +33,9 @@ export class Request {
     }
     if(!this.signature.publicKey) 
       this.signature.publicKey = this.signature.creator;
-    console.log("Request: " + JSON.stringify(this.signature));
     if(!cryptoUtils.validateSignature(this.payload, this.signature.type, this.signature.signature, this.signature.publicKey)){
       throw new IxoValidationError("Invalid request input signature '" + this.payload);
     }
-    console.log("Request.verifySignature: return true");
     return true;
   }
 
