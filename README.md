@@ -1,3 +1,6 @@
+# NO LONGER IN USE SEE ixo_cosmos AND ixo_pds
+
+
 # ixo_node
 
 The project to setup an ixo node.  It runs Node.js app using [Express 4](http://expressjs.com/).
